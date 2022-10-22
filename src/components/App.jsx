@@ -1,79 +1,80 @@
 import React from "react";
+import { ContactForm } from "./ContactForm/ContactForm";
+import {Title, TitleSeccond } from "./App.styled";
+
 import { nanoid } from 'nanoid';
-import { FormAddContact, Label, Input,ButtonSubmit } from "./App.styled";
+import { Filter } from "./Filter/Filter";
+import { ContactList } from "./ContactList/ContactList ";
 
 export class App extends React.Component{
 
-
-
   state = {
-    contacts: [],
-    name: ''
-  }
-
-  hendleNameChange = e =>{
-    const {name, value} = e.target
-
-    this.setState({[name]: value})
-
-  }
-
-  Clear = () =>{
-    this.setState({
-      name: ''
-    })
-  }
-
-  hendlOnSubmit = (e) =>{
-    e.preventDefault()
-
-    this.setState(prevState => {
- 
-      return {
-        contacts: [...prevState.contacts, {id:nanoid() , name: prevState.name}]
-      }
-      
-    })
-
-  this.Clear();
+    contacts: [
+      {id: 'id-1', name: 'Rosie Simpson', number: '459-12-56'},
+      {id: 'id-2', name: 'Hermione Kline', number: '443-89-12'},
+      {id: 'id-3', name: 'Eden Clements', number: '645-17-79'},
+      {id: 'id-4', name: 'Annie Copeland', number: '227-91-26'},
+    ],
+    filter: ''
   }
   
-render(){
-  return (<div>
-    <h1>Phonebook</h1>
-   <FormAddContact onSubmit={this.hendlOnSubmit} >
-<Label htmlFor="name">Name</Label>
-    <Input
-    id="name"
-      type="text"
-      name="name"
-      pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-      title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-      required
-      value={this.state.name}
-      onChange={this.hendleNameChange}
-    />
-<Label htmlFor="phone">Number</Label>
-    <Input
-    id="phone"
-      type="tel"
-      name="number"
-      pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-      title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-      required
-    />
-   
-    <ButtonSubmit type="submit"> Add contact </ButtonSubmit>
-   </FormAddContact>
+  hendleNameChange = e => {
+    const {name, value} = e.target;
+    this.setState({[name]: value})
+  }
 
-   <form >
-    <h2>Contacts</h2>
-    <ul>
-    {(this.state.contacts).map(el => (<li key={el.id}>{el.name}</li>))}
-    </ul>
-   </form>
-  </div>
-);
+formSubmitHandler = data => {
+
+  const {name, number} = data;
+  if(this.state.contacts.find(contact => contact.name === name || contact.number === number)) {
+    return alert(`${name} or number: ${number} is alredy in contact`)
+  }
+    this.setState(prevState =>({ 
+      contacts: [...prevState.contacts, {id:nanoid(), name, number}],
+    }))
+};
+
+idLabelName = nanoid();
+idLabelNumber = nanoid();
+idLabelSearch = nanoid();
+
+findContact = () =>{
+    const {filter, contacts} = this.state;
+    const toLowerFilter = filter.toLowerCase();
+    return contacts.filter(contact => contact.name.toLowerCase().includes(toLowerFilter));
+    }
+
+onChangeFilter = (e) =>{
+  this.setState({filter: e.target.value})
+}
+    
+onDeleteElem = (contactId) =>{
+  this.setState(prevState => ({
+    contacts: prevState.contacts.filter(contact => contact.id !== contactId)
+  }))
 }
 
+render(){
+  return (<div 
+    style={{
+      height: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      fontSize: 18,
+      color: '#010101'
+          }}>
+    <Title>Phonebook</Title>
+    <ContactForm  onSubmitDate = {this.formSubmitHandler} />
+    <TitleSeccond>Contacts</TitleSeccond>
+    <Filter value={this.state.filter} onChange={this.onChangeFilter} />
+
+   {this.state.contacts.length > 0 ? (
+       <ContactList Array={this.findContact()} onDelete={this.onDeleteElem}/>
+      ) : (
+        <p>You don't have any contact</p>
+      )}
+  </div>);
+  }
 }
