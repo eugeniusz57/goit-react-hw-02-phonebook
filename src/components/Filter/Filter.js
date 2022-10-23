@@ -1,5 +1,5 @@
 import {  Label, Input,FormAddContact } from "components/ContactForm/ContactForm.styled";
-
+import PropTypes from 'prop-types';
 
 export const Filter = ({value, onChange}) => {
 return (
@@ -18,4 +18,9 @@ return (
     />
      </FormAddContact>
 )
+}
+
+Filter.protoTypes = {
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
 }
