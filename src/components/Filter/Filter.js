@@ -23,7 +23,7 @@ export const Filter = ({ value, onChange }) => {
   );
 };
 
-Filter.protoTypes = {
+Filter.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };

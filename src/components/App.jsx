@@ -26,7 +26,9 @@ export class App extends React.Component {
     const { name, number } = data;
     if (
       this.state.contacts.find(
-        contact => contact.name === name || contact.number === number
+        contact =>
+          contact.name.toLowerCase() === name.toLowerCase() ||
+          contact.number === number
       )
     ) {
       return alert(`${name} or number: ${number} is alredy in contact`);

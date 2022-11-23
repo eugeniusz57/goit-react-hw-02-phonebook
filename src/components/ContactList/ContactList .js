@@ -7,10 +7,9 @@ export const ContactList = ({ Array, onDelete }) => (
       Array.map(({ id, name, number }) => (
         <ListItem key={id}>
           <span>
-            {' '}
             {name}: {number}
-          </span>{' '}
-          <ButtonDelete onClick={() => onDelete(id)}> ❌</ButtonDelete>{' '}
+          </span>
+          <ButtonDelete onClick={() => onDelete(id)}> ❌</ButtonDelete>
         </ListItem>
       ))
     ) : (
@@ -20,6 +19,10 @@ export const ContactList = ({ Array, onDelete }) => (
 );
 
 ContactList.propTypes = {
-  Array: PropTypes.arrayOf(PropTypes.object).isRequired,
+  Array: PropTypes.shape({
+    name: PropTypes.string,
+    id: PropTypes.number.isRequired,
+    number: PropTypes.number.isRequired,
+  }),
   onDelete: PropTypes.func.isRequired,
 };
